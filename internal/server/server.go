@@ -13,6 +13,8 @@ type Server interface {
 	Start() error
 	Readiness(ctx echo.Context) error
 	Liveness(ctx echo.Context) error
+
+	GetAllCustomers(ctx echo.Context) error
 }
 
 type EchoServer struct {
@@ -58,4 +60,7 @@ func NewEchoServer(db database.DatabaseClient) Server {
 func (e *EchoServer) registerRoutes() {
 	e.echo.GET("/readiness", e.Readiness)
 	e.echo.GET("/liveness", e.Liveness)
+
+	cg := e.echo.Group("/customers")
+	cg.GET("", e.GetAllCustomers)
 }
